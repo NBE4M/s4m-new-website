@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MOBI>
+	<url>
+		<errorurl>
+			http://www.exchange4media.com/e4m/izone1/izone_fullstory.asp?section_id=4&amp;news_id=30276&amp;tag=25184&amp;pict=10
+		</errorurl>
+		<redirecturl>
+			http://www.exchange4media.com/e4m/izone1/izone_rtable.asp
+		</redirecturl>
+	</url>
+	<url>
+		<errorurl>
+			http://www.exchange4media.com/jobscareer/microsite/index.htm
+		</errorurl>
+		<redirecturl>
+			http://www.exchange4media.com/jobs/jobscareer.aspx
+		</redirecturl>
+	</url>
+</MOBI>

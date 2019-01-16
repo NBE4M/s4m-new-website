@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.exchange4media.com/sitemap.xml
+Sitemap: https://www.exchange4media.com/google-news-sitemap.xml
+Sitemap: https://www.exchange4media.com/category-sitemap.xml
+
+
+
