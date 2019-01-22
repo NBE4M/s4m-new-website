@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Photo;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +14,7 @@ use App\Classes\FileTransfer;
 use Storage;
 use Illuminate\Filesystem\Filesystem;
 class PhotosController extends Controller
-{
-    
-    
-    
-    
+{ 
     public function __construct() {
         $this->middleware('auth');
     

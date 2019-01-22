@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>E4M CMS | Login</title>
+        <title>S4M CMS | Login</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         <link rel="apple-touch-icon" href="iosicon.png" />
@@ -74,9 +74,9 @@
                     </div>
                     <div class="form-window-login-logo">
                         <div class="login-logo">
-                            <img src="{{ asset('img/logo.png') }}" alt="E4M" style="height:auto !important"/>
+                            <img src="{{ asset('img/logo.png') }}" alt="S4M" style="height:auto !important"/>
                         </div>
-                        <h2 class="login-title">Welcome to E4M CMS</h2>
+                        <h2 class="login-title">Welcome to S4M CMS</h2>
 
                         <div class="panel-body">
                             @if (count($errors) > 0)

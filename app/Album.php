@@ -5,7 +5,7 @@ class Album extends Model
 {
     //table name
     protected $table = "album";
- protected $primaryKey = 'id';
+ 	protected $primaryKey = 'id';
     public function photo()
     {
         return $this->hasMany('App\Photo','owner_id');

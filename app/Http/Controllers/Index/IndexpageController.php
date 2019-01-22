@@ -9,10 +9,11 @@ use App\Models\Mostread;
 use App\Models\Article;
 use App\Models\Video;
 use App\ArticleF;
+use App\Ytube;
 use Carbon\Carbon;
 use App\Menu;
 use View;
-use App\Models\Album;
+use App\Album;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Helper;
@@ -50,8 +51,23 @@ class IndexpageController extends Controller
             $industryBriefing = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','url','photopath','phototitle','category_name')->where('category_id',3)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(4)->get();
             Cache::put('industryBriefing', $industryBriefing, 20);
         };
+        if (Cache::has('socialM')) {
+            $socialM= Cache::get('socialM');
+        }else{
+            $socialM = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',13)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(10)->get();
+            Cache::put('socialM', $socialM, 20);
+        };
+        if (Cache::has('rightsidemostRead')) {
+            $rightsidemostRead= Cache::get('rightsidemostRead');
+        }else{
+            $rightsidemostRead = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',9)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(3)->get();
+            Cache::put('rightsidemostRead', $rightsidemostRead, 20);
+        };
+        
         View::share('menus',$menus); 
         View::share('industryBriefing',$industryBriefing);
+        View::share('socialM',$socialM);
+        View::share('rightsidemostRead',$rightsidemostRead);
     }
 
     public function index(Request $request)
@@ -60,7 +76,7 @@ class IndexpageController extends Controller
         if (Cache::has('homeSlide')) {
             $homeSlide= Cache::get('homeSlide');
         }else{
-        	$homeSlide = DB::table('article')->select('title','url','photopath','phototitle','category_name')->where('important', 1)->where('priority','!=', 0)->orderby('priority','asc')->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(4)->get();
+        	$homeSlide = DB::table('article')->select('title','url','photopath','phototitle','category_name','category_hname')->where('important', 1)->where('priority','!=', 0)->orderby('priority','asc')->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(5)->get();
         	Cache::put('homeSlide', $homeSlide, 20);
         };
 
@@ -86,13 +102,13 @@ class IndexpageController extends Controller
         if (Cache::has('interview')) {
             $interview= Cache::get('interview');
         }else{
-            $interview = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',5)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(2)->get();
+            $interview = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name','category_hname')->where('category_id',5)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(2)->get();
             Cache::put('interview', $interview, 20);
         };
         if (Cache::has('vicharmanch')) {
             $vicharmanch= Cache::get('vicharmanch');
         }else{
-            $vicharmanch = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',11)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(2)->get();
+            $vicharmanch = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name','category_hname')->where('category_id',11)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(2)->get();
             Cache::put('vicharmanch', $vicharmanch, 20);
         };
         if (Cache::has('brandSpeaks')) {
@@ -119,16 +135,22 @@ class IndexpageController extends Controller
             $telS = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',10)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(10)->get();
             Cache::put('telS', $telS, 20);
         };
-        if (Cache::has('socialM')) {
-            $socialM= Cache::get('socialM');
+       
+        if (Cache::has('videos')) {
+            $videos= Cache::get('videos');
         }else{
-            $socialM = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',13)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(10)->get();
-            Cache::put('socialM', $socialM, 20);
+            $videos = Ytube::take(5)->get();
+            Cache::put('videos', $videos, 20);
         };
-        // dd($mainNews);
-
+        if (Cache::has('frontalbum')) {
+            $frontalbum= Cache::get('frontalbum');
+        }else{
+            $frontalbum = Album::Join('photos as p', 'album.id', '=', 'p.owner_id')
+                          ->select(DB::raw('album.title as album_title,album.description as album_desc,p.title as photo_title,p.description as photo_desc,p.photopath,p.photo_id'))->where([['album.valid',1],['p.owned_by','album'],['p.active',1]])->orderBy('p.photo_id', 'desc')->take(10)->get();
+            Cache::put('frontalbum', $frontalbum, 20);
+        };
         
-    return view('welcome',compact('menus','homeSlide','industryBriefing','mediaForum','jobs','mostRead','vicharmanch','interview','brandSpeaks','Adv','mainNews','telS','socialM'));
+    return view('welcome',compact('menus','homeSlide','industryBriefing','mediaForum','jobs','mostRead','vicharmanch','interview','brandSpeaks','Adv','mainNews','telS','socialM','videos','frontalbum'));
 
     //     if (Cache::has('ArrRecentFeatureFirstNews')) {
     //         $ArrRecentFeatureFirstNews= Cache::get('ArrRecentFeatureFirstNews');
@@ -287,23 +309,23 @@ class IndexpageController extends Controller
             $sectionArticles = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','authorname','photopath','phototitle','category_name')->where('category_name',$section)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(20)->get();
             Cache::put('sectionArticles', $sectionArticles, 20);
         };
-        if (Cache::has('mostRead')) {
-            $mostRead= Cache::get('mostRead');
+        if (Cache::has('sectionmostRead')) {
+            $sectionmostRead= Cache::get('sectionmostRead');
         }else{
-            $mostRead = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle')->where('category_id',9)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(5)->get();
-            Cache::put('mostRead', $mostRead, 20);
+            $sectionmostRead = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle')->where('category_id',9)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(5)->get();
+            Cache::put('sectionmostRead', $sectionmostRead, 20);
         };
 
-        return view('article.section', compact('menus','sectionArticles','mostRead','industryBriefing'));
+        return view('article.section', compact('menus','sectionArticles','sectionmostRead','industryBriefing'));
     }
 
-    public function Article_landing_page($section,$title,$id)
+    public function story($section,$title,$id)
     {     
 
                 if (Cache::has('articles-'.$id)) {
                 $articles= Cache::get('articles-'.$id);
                 }else{
-                $articles = Article::select('*')->where('article_id',$id)->get();
+                $articles = Article::where('article_id',$id)->get();
                 Cache::put('articles-'.$id, $articles, 20);
                 };
 
@@ -312,15 +334,20 @@ class IndexpageController extends Controller
                 return view('errors.404');
                 }
 
-                // if (Cache::has('articlesrelate-'.$id)) {
-                // $articlesrelate= Cache::get('articlesrelate-'.$id);
-                // }else{
-                // $articlesrelate = Article::with('albums', 'albums.photos','author')->where('category_id',$articles[0]->category_id)->where('article_id','!=',$id)->orderby('article_id','desc')->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(10)->get();
-                // Cache::put('articlesrelate-'.$id, $articlesrelate, 1000);
-                // };
-
+                if (Cache::has('articlesrelate-'.$id)) {
+                $articlesrelate= Cache::get('articlesrelate-'.$id);
+                }else{
+                $articlesrelate = Article::where([['category_name',$section],['article_id','!=',$id],['category_name','!=',null]])->orderby('article_id','desc')->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(10)->get();
+                Cache::put('articlesrelate-'.$id, $articlesrelate, 20);
+                };
+                if (Cache::has('storymostRead')) {
+                    $storymostRead= Cache::get('storymostRead');
+                }else{
+                    $storymostRead = Article::select(DB::raw('CONCAT(publish_date,publish_time) AS pickdate'),'title','summary','url','photopath','phototitle','category_name')->where('category_id',9)->orderby('publish_date','desc')->orderby('publish_time','desc')->limit(4)->get();
+                    Cache::put('storymostRead', $storymostRead, 20);
+                };
           
-            // $article= $articles[0];
+            $article= $articles[0];
             // if (count($articles[0]->albums) > 0) {
             // $photogallery= $articles[0]->albums[0]['photos'];
             // }else{
@@ -333,11 +360,11 @@ class IndexpageController extends Controller
             // return Redirect::to($articleurl, 301); 
             // } 
             // $url = action('Article\ArticleController@Amp_Article_landing_page', ['section' => Helper::rscUrl($section),'title'=> Helper::rscUrl($title),'id'=> $id]);
-            // $metatitel = $article->title;
-            // $metadescription = $article->summary;
-            // $metatag = $article->tags;
-            // $ogimage = Config::get('constants.awsbaseurl').$article->photopath;
-            // $ogurl = $article->url;
+            $metatitle = $article->title;
+            $metadescription = $article->summary;
+            $metatag = $article->tags;
+            $ogimage = $article->photopath;
+            $ogurl = $article->url;
             // $canonicalstory1= action('Article\ArticleController@Article_landing_page', ['section' => Helper::rscUrl($section),'title'=> Helper::rscUrl($title),'id'=> $id]);
             // $canonicalstory = strtolower($canonicalstory1);
             // $canonical= $url;
@@ -363,6 +390,51 @@ class IndexpageController extends Controller
       //   $parents = DB::select( DB::raw("SELECT * FROM banner where desktop=1 AND forpage='story' order by bid asc"));  
       //   }
          
-        return view('article.story', compact('articles'));
+        return view('article.story', compact('articles','articlesrelate','socialM','storymostRead','metatitle','metadescription','metatag','ogimage','ogurl'));
+    }
+
+    public function photogallery()
+    {
+        $shareAlbum = Album::Join('photos as p', 'album.id', '=', 'p.owner_id')
+                          ->select(DB::raw('album.id,album.title as album_title,album.description as album_desc,p.title as photo_title,p.description as photo_desc,p.photopath,p.photo_id'))->where([['album.valid',1],['p.owned_by','album'],['p.active',1]])->groupby('album.id')->orderBy('p.photo_id', 'desc')->paginate(20);
+        $metatitel = 'Photo, Image Gallery - Samachar4media';
+        $ogtitel =  'Photo, Image Gallery - Samachar4media';
+        $ogimage = '';
+        $ogurl = '';
+        $canonical = '';
+        $metatag = 'media news photo gallery, marketing news image gallery, advertising news picture gallery';
+        $metadescription = 'Samachar4media meida, advertising, photo, image, picture gallery page India.';
+            // $arrmostread = $this->arrmostread;
+            // $ArrMenuSLatestVideo = $this->ArrMenuSLatestVideo;
+            // $ArrRecentNewsMiddelbarList = $this->ArrRecentNewsMiddelbarList;
+            // $ArrRecentImportaintNewsHeaderList = $this->ArrRecentImportaintNewsHeaderList;
+            // $ArrRecentFeatureNewsList = $this->ArrRecentFeatureNewsList;
+            // $ArrRecentNewsMiddelbarList = $this->ArrRecentNewsMiddelbarList;
+            // $menus = $this->menus;
+            // $parents = $this->parents;
+        return view('photogallery.album', compact('shareAlbum','ArrViewPhotos','metatitel','ogtitel','ogimage','ogurl','canonical','metadescription','ArrRecentFeatureNewsList','menus','arrmostread','ArrRecenttopnews','ArrRecentImportaintNewsHeaderList','ArrRecentNewsMiddelbarList','ArrMenuSLatestVideo'));
+    
+    }
+
+    public function galleryExplore($title,$id)
+    {
+        $galleryPic = Album::Join('photos as p', 'album.id', '=', 'p.owner_id')->select(DB::raw('album.id ,album.title as album_title,album.description as album_desc,p.title as photo_title,p.description as photo_desc,p.photopath,p.photo_id'))->where([['album.valid',1],['p.owned_by','album'],['p.active',1],['album.id',$id]])->orderBy('p.photo_id', 'desc')->get();
+        $otherGallery = Album::Join('photos as p', 'album.id', '=', 'p.owner_id')->select(DB::raw('album.id ,album.title as album_title,album.description as album_desc,p.title as photo_title,p.description as photo_desc,p.photopath,p.photo_id'))->where([['album.valid',1],['p.owned_by','album'],['p.active',1],['album.id','!=',$id]])->orderBy('p.photo_id', 'desc')->get();
+        $metatitel = 'Photo, Image Gallery - Samachar4media';
+        $ogtitel =  'Photo, Image Gallery - Samachar4media';
+        $ogimage = '';
+        $ogurl = '';
+        $canonical = '';
+        $metatag = 'media news photo gallery, marketing news image gallery, advertising news picture gallery';
+        $metadescription = 'Samachar4media meida, advertising, photo, image, picture gallery page India.';
+            // $arrmostread = $this->arrmostread;
+            // $ArrMenuSLatestVideo = $this->ArrMenuSLatestVideo;
+            // $ArrRecentNewsMiddelbarList = $this->ArrRecentNewsMiddelbarList;
+            // $ArrRecentImportaintNewsHeaderList = $this->ArrRecentImportaintNewsHeaderList;
+            // $ArrRecentFeatureNewsList = $this->ArrRecentFeatureNewsList;
+            // $ArrRecentNewsMiddelbarList = $this->ArrRecentNewsMiddelbarList;
+            // $menus = $this->menus;
+            // $parents = $this->parents;
+        return view('photogallery.gallery', compact('galleryPic','otherGallery','ArrViewPhotos','metatitel','ogtitel','ogimage','ogurl','canonical','metadescription','ArrRecentFeatureNewsList','menus','arrmostread','ArrRecenttopnews','ArrRecentImportaintNewsHeaderList','ArrRecentNewsMiddelbarList','ArrMenuSLatestVideo'));
     }
 }

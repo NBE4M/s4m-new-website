@@ -132,8 +132,6 @@ class ArticlesController extends Controller {
                     $q->where('articles.article_id', $_GET['keyword']);
                 }
             }
-
-
             $q->groupBy('articles.article_id');
             $q->orderBy('articles.article_id', 'DESC');
             $articles = $q->paginate(config('constants.recordperpage'));
@@ -145,8 +143,6 @@ class ArticlesController extends Controller {
                     ->orderBy('publish_date', 'desc')->orderBy('publish_time', 'desc')
                     ->limit(5)->get();
         }
-
-
         elseif ($option == 'missedarticles') {
             $q = DB::table('articles')
                     //->join('users');
@@ -163,15 +159,12 @@ class ArticlesController extends Controller {
                 if (@$_GET['searchin'] == 'article_id') {
                     $q->where('articles.article_id', $_GET['keyword']);
                 }
-            }
-           
-            
+            } 
             $q->groupBy('articles.article_id');
             $q->orderBy('articles.article_id', 'DESC');
             $articles = $q->paginate(config('constants.recordperpage'));
         }
         elseif ($option == 'lockedarticles') {
-
             $q = DB::table('articles')
                 ->Leftjoin('authors', 'articles.author_id', '=', 'authors.author_id')
                 ->Leftjoin('users', 'articles.locked_by', '=', 'users.id')
@@ -190,9 +183,6 @@ class ArticlesController extends Controller {
             $q->groupBy('articles.article_id');
             $q->orderBy('articles.article_id', 'DESC');
             $articles = $q->paginate(config('constants.recordperpage'));
-            
-
-
         }
         else {
             $i = 0;
@@ -488,7 +478,7 @@ class ArticlesController extends Controller {
     /*generate news*/
 
     public function create() {
-        dd('hi');
+        
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
@@ -505,7 +495,7 @@ class ArticlesController extends Controller {
         //$country = Country::where('valid', '=', '1')->get();
         //$states = State::where('valid', '=', '1')->orderBy('name')->get();
         $newstype = DB::table('news_type')->where('valid', '1')->get();
-        $category = DB::table('category')->where('channel_id', $currentChannelId)->where('valid', '1')->where('parent_id','0')->orderBy('name')->get();
+        $category = DB::table('category')->where('valid', '1')->where('parent_id','0')->orderBy('name')->get();
         $album = DB::table('album')->orderBy('id','desc')->get();
          $whatsup = DB::table('tbl_whatsapp_article')->select(DB::raw('count(id) as cn'),'publish_date','publish_time')->where('publish_date',date('Y-m-d'))->first();
          $timestamp = strtotime($whatsup->publish_time) + 60*60 + 60*60;

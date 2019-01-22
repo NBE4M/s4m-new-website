@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Dashboard - E4M')
+@section('title', 'Dashboard - S4M')
 
 
 @section('sidebar')
@@ -140,44 +140,39 @@
         </div>
     </div>
 </div>
-
                     <!--Dashboard Specific Jquery Pre-loading Functions-->
-                    <script>
-                        $().ready(function() {
-
-                            var isDragActive = false;
-                            // Quicklaunch Widget
-                            $( "#sortable" ).sortable({
-                                cancel: '#sortable li:last-child',
-                                start: function(event, ui) {
-                                    isDragActive = true;
-                                    $('.dashboard-quick-launch li img').tooltip('hide');
-                                },
-                                stop: function(event, ui) {
-                                    isDragActive = false;
-                                },
-                                containment: 'parent',
-                                tolerance: 'pointer'
-                            });
-
-                            // Make widgets sortable
-                            $( "#photon_widgets" ).sortable({
-                                cancel: '.blank-widget, .flip-it',
-                                placeholder: 'dashboard-widget-placeholder',
-                                start: function(event, ui) {
-                                    isDragActive = true;
-                                    $('.widget-holder').addClass('noPerspective');
-                                    $('.dashboard-quick-launch li img').tooltip('hide');
-                                },
-                                stop: function(event, ui) {
-                                    isDragActive = false;
-                                    $('.widget-holder').removeClass('noPerspective');
-                                },
-                                tolerance: 'pointer'
-                            });
-
-
-                            $('.dashboard-quick-launch li img').not('.dashboard-quick-launch li:last-child').tooltip({
+<script>
+    $().ready(function() {
+        var isDragActive = false;
+        // Quicklaunch Widget
+            $("#sortable" ).sortable({
+                cancel: '#sortable li:last-child',
+                start: function(event, ui) {
+                    isDragActive = true;
+                    $('.dashboard-quick-launch li img').tooltip('hide');
+                },
+                stop: function(event, ui) {
+                    isDragActive = false;
+                },
+                containment: 'parent',
+                tolerance: 'pointer'
+            });
+            // Make widgets sortable
+            $( "#photon_widgets" ).sortable({
+                    cancel: '.blank-widget, .flip-it',
+                    placeholder: 'dashboard-widget-placeholder',
+                    start: function(event, ui) {
+                        isDragActive = true;
+                        $('.widget-holder').addClass('noPerspective');
+                        $('.dashboard-quick-launch li img').tooltip('hide');
+                    },
+                    stop: function(event, ui) {
+                        isDragActive = false;
+                        $('.widget-holder').removeClass('noPerspective');
+                    },
+                    tolerance: 'pointer'
+                });
+            $('.dashboard-quick-launch li img').not('.dashboard-quick-launch li:last-child').tooltip({
                                 placement: 'top',
                                 html: true,
                                 trigger: 'manual',
@@ -214,8 +209,9 @@
                                 }
                             });
                         });
-                    </script>
-                    <!--End ---- Dashboard Specific Jquery Pre-loading Functions-->
+</script>
+<!--End ---- Dashboard Specific Jquery Pre-loading Functions-->
+
 
 <script>
     $().ready(function() {

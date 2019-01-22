@@ -16,11 +16,11 @@
           <div class="col-md-6 col-lg-7 text-center text-md-right">
 
             <!-- Facebook -->
-            <a class="fb-ic">
+            <a href="https://www.facebook.com/Samachar4media/" class="fb-ic">
               <i class="fab fa-facebook-f white-text mr-4"> </i>
             </a>
             <!-- Twitter -->
-            <a class="tw-ic">
+            <a href="https://twitter.com/samachar4media?lang=en" class="tw-ic">
               <i class="fab fa-twitter white-text mr-4"> </i>
             </a>
             <!-- linkedin -->
@@ -70,41 +70,15 @@
           <!-- Links -->
           <h6 class="text-uppercase font-weight-bold">Useful links</h6>
           <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
-      <div class="scrollbar style-4 footer-height">
-          <p>
-            <a class="text-white" href="#!">इंडस्ट्री ब्रीफिंग</a>
-          </p>
-          <p>
-            <a class="text-white" href="#!"> ऐड वर्ल्ड</a>
-          </p>
-          <p>
-            <a class="text-white" href="#!">लोकप्रिय खबरें</a>
-          </p>
-          <p>
-            <a class="text-white" href="#!">टेलिस्कोप</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">ब्रैंड स्पीक्स</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">विचार मंच</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">साक्षात्कार</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">मीडिया फोरम</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">मुख्य खबरें</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">एडमिशन-जॉब्स</a>
-          </p>
-        <p>
-            <a class="text-white" href="#!">संपर्क करें</a>
-          </p>
-        </div>
+      	  <div class="scrollbar style-4 footer-height">
+      	  	@if(isset($menus))
+      	  	@foreach($menus as $menu)
+	          <p>
+	            <a class="text-white" href="{{url('')}}/{{$menu->e_name}}-news.html">{{$menu->name}}</a>
+	          </p>
+	          @endforeach
+	        @endif  
+          </div>
 
         </div>
         <!-- Grid column -->
@@ -169,13 +143,18 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
 <script src="{{asset('js/jquery-3.2.1.min.js')}}"></script> 
-  <script type='text/javascript' src="{{asset('js/sticky-sidebar.js')}}"></script>
-   <script src="{{asset('js/jquery.newsTicker.js')}}"></script>
-  <!--<script type="text/javascript" src="js/jquery.vticker-min.js"></script>-->
-  <script type="text/javascript" src="{{asset('js/post-block.js')}}"></script>
+<script type='text/javascript' src="{{asset('js/sticky-sidebar.js')}}"></script>
+<script src="{{asset('js/jquery.newsTicker.js')}}"></script>
+<!--<script type="text/javascript" src="js/jquery.vticker-min.js"></script>-->
+<script type="text/javascript" src="{{asset('js/post-block.js')}}"></script>
 <script src="{{asset('js/popper.min.js')}}"></script> 
 <script src="{{asset('js/bootstrap-4.0.0.js')}}"></script>
 <script src="{{asset('js/mdb.min.js')}}"></script>
 <script src="{{asset('js/custom.js')}}"></script>
 <script src="{{asset('js/s4m.js')}}"></script>
+<script src="{{asset('js/social.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script  src="{{asset('js/story.js')}}" charset="utf-8"></script> 
+
+ 

@@ -1,5 +1,4 @@
 @extends('layouts.sidebar')
-{{dd($parents)}}
 <!DOCTYPE html>
 <html>
 <head>

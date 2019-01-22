@@ -343,8 +343,10 @@ Route::get('photogallery/{title}-{id}.html', function($title,$id){
         $href = "https://www.exchange4media.com/photo/".$title.'-'.$id.".html";
         return Redirect::to($href, 301);
 });
-Route::get('photos.html','Photogallery\PhotogalleryController@Pthoto_Gallery_listing_page');
-Route::get('photo/{title}-{id}.html','Photogallery\PhotogalleryController@Pthoto_Gallery_landing_page')->where('title', '(.*)');
+// Route::get('photos.html','Photogallery\PhotogalleryController@Pthoto_Gallery_listing_page');
+Route::get('photos.html','Index\IndexpageController@photogallery');
+Route::get('photo/{title}-{id}.html','Index\IndexpageController@galleryExplore')->where('title', '(.*)');
+/*photogaller*/
 /*articles*/
 Route::get('latest-news.html','Article\ArticleController@Latest_Article_listing_page')->where('section', '(.*)');
 Route::get('feature-news.html','Article\ArticleController@Feature_Article_listing_page')->where('section', '(.*)');
@@ -356,7 +358,7 @@ Route::get('guest-column.html','Article\ArticleController@guestcoloum_Article_li
 
 Route::get('guest-articles.html','Article\ArticleController@gueststory_Article_listing_page');
 
-Route::get('{section}/{title}-{id}.html','Index\IndexpageController@Article_landing_page')->where('title', '(.*)');
+Route::get('{section}/{title}-{id}.html','Index\IndexpageController@story')->where('title', '(.*)');
 // Route::get('/amp/{section}-news/{title}-{id}.html','Article\ArticleController@Amp_Article_landing_page')->where('section', '(.*)')->where('title', '(.*)');
 // Route::get('{section}-news/{title}-{id}.html','Article\ArticleController@Article_landing_page')->where('section', '(.*)')->where('title', '(.*)');
 
@@ -405,6 +407,9 @@ Route::get('create_photojson','Photogallery\PhotogalleryController@create_photoj
 
 Route::get('/logsdelete', function() {
     $exitCode = Artisan::call('logs:clear');
+});
+Route::get('cachealbum', function(){
+     $newcode = Cache::forget('sharealbum');;
 });
 
 /*Route::get('/show-cache', function() {

@@ -1,7 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Create Article - E4MCMS')
-
+@section('title', 'Create Article - S4M-CMS')
 
 @section('content')
 <style> .none { display:none; } </style>

@@ -10,8 +10,8 @@
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <!-- CSRF Token End-->
       <!-- Meta details Start-->
-      @if(isset($metatitel) && !empty($metatitel))
-      <title>{{$metatitel}} - Samachar4media</title>
+      @if(isset($metatitle) && !empty($metatitle))
+      <title>{{$metatitle}} - Samachar4media</title>
       @else
       <title>Media News, Advertising News, Media Industry Updates – Samachar4media</title>
       @endif
@@ -22,8 +22,8 @@
       @endif 
 
       <meta property="fb:pages" content="349239931811206" />
-      @if(isset($metatitel) && !empty($metatitel))
-      <meta name="title" content="{{$metatitel}}"/>
+      @if(isset($metatitle) && !empty($metatitle))
+      <meta name="title" content="{{$metatitle}}"/>
       @else
       <meta name="title" content="Media News, Advertising News, Media Industry Updates – Samachar4media"/>
       @endif
@@ -47,8 +47,8 @@
       @else
       <meta itemprop="thumbnailUrl" content="http://www.samachar4media.com/images/logo.png"/>
       @endif
-      @if(isset($metatitel) && !empty($metatitel))
-      <meta property="og:title" content="{{$metatitel}} - Samachar4media"/>
+      @if(isset($metatitle) && !empty($metatitle))
+      <meta property="og:title" content="{{$metatitle}} - Samachar4media"/>
       @else
       <meta property="og:title" content="Media News, Advertising News, Media Industry Updates – Samachar4media"/>
       @endif
@@ -75,8 +75,8 @@
       <meta name="twitter:card" content="summary_large_image">
       <meta name="twitter:site" content="@samachar4media">
       <meta name="twitter:creator" content="@samachar4media">
-      @if(isset($metatitel) && !empty($metatitel))
-      <meta name="twitter:title" content="{{$metatitel}}">
+      @if(isset($metatitle) && !empty($metatitle))
+      <meta name="twitter:title" content="{{$metatitle}}">
       @else
       <meta name="twitter:title" content="{{ config('app.name', 'Media News, Advertising News, Media Industry Updates – Samachar4media') }}"/>
       @endif

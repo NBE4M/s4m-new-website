@@ -1,247 +1,391 @@
-<div class="col-md-12 col-xs-12 col-lg-4 col-sm-5 titlem sidebar rightSidebar">
-  <div class="theiaStickySidebar">
-<div class="row no-gutters plr15">
-
-
- 
-<div class="col-lg-12 col-md-6 float-left no-padding">
-<h6 class="text-uppercase flama-font titlest"><a href="{{url('feature-news.html')}}">TOP NEWS</a></h6>
- @foreach($ArrRecentFeatureNewsList as   $ArrRecenttopnews)
- <div class="media pt-2 flama mb-3 topnews"> <a href="{{$ArrRecenttopnews->url}}"><img src="@if($ArrRecenttopnews->story_type =='video'){{ $ArrRecenttopnews->photopath }}@elseif($ArrRecenttopnews->story_type =='album'){{config('constants.awsbaseurl').config('constants.awalbumimagedir')}}{{ $ArrRecenttopnews->photopath }}@else{{config('constants.awsbaseurl')}}{{ $ArrRecenttopnews->photopath }}@endif" alt="{{ $ArrRecenttopnews->phototitle }}" class="mr-2"></a>
-  <p class="media-body pb-2 mb-0 small2 lh-125"> 
-  <a href="{{$ArrRecenttopnews->url}}">{{Str::limit($ArrRecenttopnews->title, $limit = 90, $end = '...')}}</a><br>
-  <span class="date d-block mt-2"><i class="far fa-clock"></i><a href="{{url('')}}/articles/{{(new DateTime($ArrRecenttopnews->publish_date))->format('Y-m-d')}}.html" >@if(Carbon\Carbon::parse($ArrRecenttopnews->updated_at)->diffInWeeks() > 1)
-                            {{(new DateTime($ArrRecenttopnews->publish_date))->format('d-F-Y')}} 
-                            @else 
-                            {{ Carbon\Carbon::parse($ArrRecenttopnews->publish_date)->diffForHumans()}}
-                            @endif</a></span>
-  </p>
-</div>
-@endforeach
-<div class="col-lg-12 col-12">
-        <p class="text-right flama-font small mt-2"><a href="{{url('feature-news.html')}}" class="pnk">SEE MORE <i class="fas fa-arrow-circle-right"></i></a></p>
-        </div>
- </div>
-   <div class="col-lg-12 col-md-6 float-left no-padding text-center desktopadd">@if(isset($parents[8])) @if($parents[8]->forpage=='story')@if($parents[8]->status==1){!!$parents[8]->bscript!!}@else @endif @else  @if($parents[8]->status==1){!!$parents[8]->bscript!!}@else @endif @endif @endif</div>
-   
-   <div class="col-lg-12 col-md-6 float-left no-padding titlem mt-3 editorpick">
-<h6 class="text-uppercase flama-font titlest"><a href="{{url('editor-picks.html')}}">EDITOR'S PICK</a></h6>
- <div id="editorspick" class="carousel vert carousel-showmanymoveone2 slide mt-3" data-ride="carousel" data-interval="900">
-         <div class="carousel-inner">
-           @foreach($ArrRecentImportaintNewsHeaderList as $index =>  $ArrRecentImportaintNewsHeaderList)
-            @if($index == 0)
-            <div class="carousel-item  mb-1 active">
-            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 no-padding" >
-                  <a href="{{$ArrRecentImportaintNewsHeaderList->url}}"><img src="{{Config::get('constants.awsbaseurl')}}{{ $ArrRecentImportaintNewsHeaderList->photopath }}" alt="{{ $ArrRecentImportaintNewsHeaderList->phototitle }}" width="100%"></a>
-                <p class="flama pb-2 mt-1 small lh-130 mb-0"> 
-  <a href="{{$ArrRecentImportaintNewsHeaderList->url}}">{{Str::limit($ArrRecentImportaintNewsHeaderList->title, $limit = 90, $end = '...')}}</a><br>
-  <span class="date"><i class="far fa-clock"></i> <a href="{{url('')}}/articles/{{$ArrRecentImportaintNewsHeaderList->publish_date}}.html" >@if(Carbon\Carbon::parse($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---')->diffInWeeks() > 1)
-                            {{(new DateTime($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---'))->format('d-F-Y')}} 
-                            @else 
-                            {{ Carbon\Carbon::parse($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---')->diffForHumans()}}
-                            @endif</a></span>
-  </p>
+<!--right part-->
+  <div class="col-md-5 col-lg-3 col-xs-6 pr-0 mob-p-0 mob-mt-30 rightSidebar">
+    <div class="theiaStickySidebar">
+      <!--top-news story page-->
+      <div class="row mob-m-0">
+       <div class="row pl-0 mb-3 ml-0 title-holder">
+        <h5 class="mb-0 bdr-solid-l border-warning heading-bdr">
+          <strong>
+            <span class="bg-white pl-3 pr-3">टॉप न्यूज़</span>
+          </strong>
+          <small>
+            <a href="#" title="और देखें" class="float-right mt-1 pl-2 text-danger mob-seemore bg-white">
+              <strong>और पढ़ें</strong>
+            </a>
+          </small>
+        </h5>
+      </div>
+      <div class="row m-0 p-0">
+        @if(isset($rightsidemostRead))           
+        <div class="col-md-12 p-0">
+          <!--<i class="fa fa-arrow-up" id="nt-example1-prev"></i>-->
+          <ul id="nt-example2" class="top-news-story">
+            @foreach($rightsidemostRead as $mo)
+            <li>
+              <div class="card bg-dark text-white">
+                 <img class="card-img img-fluid" src="{{Config::get('constants.storagepath')}}/{{$mo->photopath}}" alt="{{$mo->phototitle}}" onerror="this.onerror=null;this.src='{{url("images/brand-1.jpg")}}';">
+                <div class="card-img-overlay d-flex">
+                  <a href="#" class="align-self-end">
+                    <span class="badge">{{$mo->category_name}}</span> 
+                    <h6 class="card-title mb-0">{{$mo->title}}</h6>
+                  </a>
                 </div>
-            </div>
-            @else
-            <div class="carousel-item  mb-1">
-            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12 no-padding" >
-               <a href="{{$ArrRecentImportaintNewsHeaderList->url}}"><img src="{{Config::get('constants.awsbaseurl')}}{{ $ArrRecentImportaintNewsHeaderList->photopath }}" alt="{{ $ArrRecentImportaintNewsHeaderList->phototitle }}" width="100%"></a>
-                <p class="flama pb-2 mt-1 small lh-130 mb-0"> 
-  <a href="{{$ArrRecentImportaintNewsHeaderList->url}}">{{Str::limit($ArrRecentImportaintNewsHeaderList->title, $limit = 90, $end = '...')}}</a><br>
-  <span class="date"><i class="far fa-clock"></i> <a href="{{url('')}}/articles/{{$ArrRecentImportaintNewsHeaderList->publish_date}}.html" >@if(Carbon\Carbon::parse($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---')->diffInWeeks() > 1)
-                            {{(new DateTime($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---'))->format('d-F-Y')}} 
-                            @else 
-                            {{ Carbon\Carbon::parse($ArrRecentImportaintNewsHeaderList->publish_date && $ArrRecentImportaintNewsHeaderList->publish_date ? $ArrRecentImportaintNewsHeaderList->publish_date .' '. $ArrRecentImportaintNewsHeaderList->publish_time : '---')->diffForHumans()}}
-                            @endif</a></span>
-  </p>
-                </div>
-            </div>
-            @endif
-            @endforeach
+              </div>
+            </li>
+            @endforeach 
+          </ul>
+          <!--<i class="fa fa-arrow-down" id="nt-example2-next"></i>-->                  
+        </div>              
 
-        </div>
-        <div class="col-lg-12 col-12">
-        <p class="text-right flama-font small mt-2"><a href="{{url('editor-picks.html')}}" class="pnk">SEE MORE <i class="fas fa-arrow-circle-right"></i></a></p>
-        </div>
+      </div>
     </div>
-</div>
-    
- <div class="col-lg-12 col-md-6 float-left no-padding text-center mb-3 desktopadd">@if(isset($parents[9])) @if($parents[9]->forpage=='story')@if($parents[9]->status==1){!!$parents[9]->bscript!!}@else @endif @else  @if($parents[9]->status==1){!!$parents[9]->bscript!!}@else @endif @endif @endif</div>
+    <!--top-news story page-->       
 
-<div class="col-lg-12 col-md-6 float-left no-padding d-table titlem latestnews mt-4">
-<h6 class="text-uppercase flama-font titlest"><a href="{{url('latest-news.html')}}">Latest News</a></h6>
-<div class="scrollbar latestnews" id="style-4">
-   @foreach($ArrRecentNewsMiddelbarList as $ArrRecentNewsMiddelbarList)
-<div class="media pt-3 flama"> <a href="{{$ArrRecentNewsMiddelbarList->url}}"><img src="{{Config::get('constants.awsbaseurl')}}{{ $ArrRecentNewsMiddelbarList->photopath }}" alt="{{ $ArrRecentNewsMiddelbarList->phototitle }}" class="mr-2" ></a>
-  <p class="media-body pb-1 mb-0 small lh-125"> 
-  <a href="{{$ArrRecentNewsMiddelbarList->url}}">{{Str::limit($ArrRecentNewsMiddelbarList->title, $limit = 90, $end = '...')}}</a><br>
-  <span class="date"><i class="far fa-clock"></i><a href="{{url('')}}/articles/{{$ArrRecentNewsMiddelbarList->publish_date}}.html" >@if(Carbon\Carbon::parse($ArrRecentNewsMiddelbarList->publish_date && $ArrRecentNewsMiddelbarList->publish_date ? $ArrRecentNewsMiddelbarList->publish_date .' '. $ArrRecentNewsMiddelbarList->publish_time : '---')->diffInWeeks() > 1)
-                            {{(new DateTime($ArrRecentNewsMiddelbarList->publish_date && $ArrRecentNewsMiddelbarList->publish_date ? $ArrRecentNewsMiddelbarList->publish_date .' '. $ArrRecentNewsMiddelbarList->publish_time : '---'))->format('d-F-Y')}} 
-                            @else 
-                            {{ Carbon\Carbon::parse($ArrRecentNewsMiddelbarList->publish_date && $ArrRecentNewsMiddelbarList->publish_date ? $ArrRecentNewsMiddelbarList->publish_date .' '. $ArrRecentNewsMiddelbarList->publish_time : '---')->diffForHumans()}}
-                            @endif</a></span>
-  </p>
-</div>
-@endforeach
- <div class="col-lg-12 col-12">
-        <p class="text-right flama-font small mt-2"><a href="{{url('latest-news.html')}}" class="pnk">SEE MORE <i class="fas fa-arrow-circle-right"></i></a></p>
-        </div>
-</div>
-
-</div>
-
-
- <div class="col-lg-12 col-md-6 float-left no-padding text-center mt-4 desktopadd">@if(isset($parents[10])) @if($parents[10]->forpage=='story')@if($parents[10]->status==1){!!$parents[10]->bscript!!}@else @endif @else  @if($parents[10]->status==1){!!$parents[10]->bscript!!}@else @endif @endif @endif</div>
-
-<div class="col-lg-12 col-md-6 float-left no-padding titlem mt-4 mostread">
-<h6 class="text-uppercase flama-font titlest">MOST READ</h6>
-<ol class="flama mt-3">
-  @foreach($arrmostread as  $arrmostread)
- <div class="media pt-2 flama mb-3"> <a href="{{$arrmostread->url}}"><img src="{{Config::get('constants.awsbaseurl')}}{{ $arrmostread->photopath }}" class="mr-2" onerror="this.onerror=null;this.src='{{Config::get('constants.SiteCmsurl')}}default-story.jpg';"></a>
-  <p class="media-body pb-2 mb-0 small2 lh-125"> 
-  <a href="{{$arrmostread->url}}"> {{ $arrmostread->title}}</a><br>
-  <span class="date d-block mt-2"><i class="far fa-clock"></i> <a href="{{url('')}}/articles/{{$arrmostread->publish_date}}.html" >@if(Carbon\Carbon::parse($arrmostread->publish_date)->diffInWeeks() > 1)
-                            {{(new DateTime($arrmostread->publish_date))->format('d-F-Y')}} 
-                            @else 
-                            {{ Carbon\Carbon::parse($arrmostread->publish_date)->diffForHumans()}}
-                            @endif</a></span>
-  </p>
-</div>
-  @endforeach
-</ol>
-</div>
-<div class="col-lg-12 col-md-6 float-left no-padding text-center mt-4 desktopadd">@if(isset($parents[11])) @if($parents[11]->forpage=='story')@if($parents[11]->status==1){!!$parents[11]->bscript!!}@else @endif @else  @if($parents[11]->status==1){!!$parents[11]->bscript!!}@else @endif @endif @endif</div>
-
- <div class="col-md-12 col-lg-12 col-sm-6 col-12 no-padding mt-0 float-left whatsappicon text-center">
-<a href="https://wb.messengerpeople.com/?widget_hash=0ea36115f3d0671767cfbef55419271a&lang=en&wn=0&pre=1" target="_blank"><img src="https://storage.googleapis.com/news-photo/static-images/whatsapp.png" class="img-fluid"></a>
-</div> 
-<div class="col-md-12 col-lg-12 col-sm-6 col-12 no-padding mt-4 float-left" style="border: 2px solid #0f8ea8;
-    padding: 15px 0;">
-<form class="card card-sm contact_form" id="contact_form" method="post">
- 
- 
-<div class="col float-left mt-0 pb-0">
-<h4 class="flama-font mt-0 mtm pnk">e4m Daily Dozen</h4>
-<p class="mb-2 mt-2 flama-font">Our top 12 headlines, in one daily newsletter.</p>
-
-<div class="card-body row no-gutters align-items-center d-block">
-<!--end of col-->
-<div class="col">
-<span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-<input type="email" class="form-control form-control-sm form-control-borderless ui-autocomplete-input" id="s_email" required placeholder="E-mail" name="s_email">
-<span id='mail_success' style="display: none;" class='success mail_success' ><img src='{{url('')}}/img/success.png'>Thanks For Subscribe!</span>
-</div>
-<!--end of col-->
-<div class="col-auto mt-2">
-<button class="btn btn-sm flama-font subscribe" id="subscribe" type="button">SUBSCRIBE</button>
-</div>
-<p class="f10 pb-0 mb-0 fira">By clicking Sign Up, I agree to the <a target="_blank" href="{{url('')}}/term-condition.html">Terms of Use</a> and <a target="_blank" href="{{url('')}}/privacy-policy.html">Privacy Policy</a>.</p>
-
-<!--end of col-->
-</div>
-</div>
-
-</form>
-</div>
-
-<div class="col-lg-12 col-md-6 col-12 float-left no-padding d-table titlem latestnews mt-4">
-<h6 class="text-uppercase flama-font mt-0" style="border-bottom:2px solid #c12450;">#TRENDING <span class="pnk">Topic</span><span class="float-right flama-font pnk f18"><a href="https://www.exchange4media.com/tags.html" class="pnk"><i class="fas fa-arrow-circle-right"></i></a></span>
-</h6>
-<ul class="trend border p-3">
-  @foreach((new \App\Helpers\Helper)->trand() as $tren)
-  <li><a href="https://www.exchange4media.com/tags/{{str_slug($tren->tag)}}.html" class="trending">#{{$tren->tag}}</a></li>
-  @endforeach
-</ul>
-</div>
-
-<div class="col-lg-12 col-md-6 col-12 mt-2 float-left bg-light no-padding mt-4">
-<h6 class="text-uppercase flama-font mt-0" style="border-bottom:2px solid #c12450;">STAY <span class="pnk">CONNECTED</span>
-</h6>
-
-            <div class="list-group">
-                <a href="https://www.facebook.com/exchange4media" target="_blank" class="list-group-item facebook-like">
-                    <h3 class="float-right">
-                        <i class="fab fa-facebook-f"></i>
-                    </h3>
-                    <h4 class="list-group-item-heading count flama-font">
-                        {{(new \App\Helpers\Helper)->stay()->fb_count}}</h4>
-                    <p class="list-group-item-text">
-                        Facebook Likes</p>
-                </a>
-                <a href="https://twitter.com/e4mtweets" target="_blank" class="list-group-item twitter">
-                    <h3 class="float-right">
-                        <i class="fab fa-twitter"></i>
-                    </h3>
-                    <h4 class="list-group-item-heading count flama-font">
-                        {{(new \App\Helpers\Helper)->stay()->twiiter_count}}</h4>
-                    <p class="list-group-item-text">
-                        Twitter Followers</p>
-                </a>
-                <a href="https://in.linkedin.com/company/exchange4media" target="_blank" class="list-group-item linkedin">
-                    <h3 class="float-right">
-                        <i class="fab fa-linkedin-in"></i>
-                    </h3>
-                    <h4 class="list-group-item-heading count flama-font">
-                      {{(new \App\Helpers\Helper)->stay()->linkedin_count}}</h4>
-                    <p class="list-group-item-text">
-                        Linkedin</p>
-                </a>
-                
-                <a href="https://www.youtube.com/user/exchange4media" target="_blank" class="list-group-item youtube">
-                    <h3 class="float-right">
-                        <i class="fab fa-youtube"></i>
-                    </h3>
-                    <h4 class="list-group-item-heading count flama-font">
-                      {{(new \App\Helpers\Helper)->stay()->youtube}}</h4>
-                    <p class="list-group-item-text">
-                        Youtube Subscribers</p>
-                </a>
+    <hr class="bdr-solid p-0 mb-2">
+    <!--whatsup-->
+    <div class="row m-0">
+      <div class="col-md-12 p-0 text-center">
+        <p class="m-0text-center mb-0">
+          <img src="{{url('images/whatsapp.png')}}" class="img-fluid whatsup">
+        </p>
+      </div>
+    </div>
+    <!--whatsup-->
+    <hr class="bdr-solid p-0 mb-2">
+    <!--square banner add-->
+    <div class="row">
+      <div class="col-md-12 p-0 text-center">
+        <p class="m-0 add-text text-right">
+          <small class="text-muted">Advertisment</small>
+        </p>
+        <img src="{{url('images/ad-277x300-add.jpg')}}" class="img-fluid">
+      </div>
+    </div>
+    <!--square banner add-->
+    <hr class="bdr-solid p-0 mb-2"> 
+    <!--2nd section news-->
+    <div class="row mt-3 mob-m-0 mob-mt-15">
+      <div class="col-md-12 p-0">
+        <div class="row pl-0 mb-3 ml-0 title-holder">
+          <h5 class="mb-0 bdr-solid-l border-warning heading-bdr">
+            <strong>
+              <span class="bg-white pl-2 pr-1">सबसे लोकप्रिय खबरें</span>
+            </strong>
+            <small>
+              <a href="#" title="और देखें" class="float-right mt-1 pl-2 text-danger mob-seemore bg-white">
+                <strong>और पढ़ें</strong>
+              </a>
+            </small>
+          </h5>
+        </div>            
+        <div class="row m-0">                
+          <div class="row m-0">
+            @for($z=0;$z < 1; $z++)
+            <div class="col-md-12 bg-dark p-1 rounded"> 
+              <a href="{{$rightsidemostRead[$z]->url}}">
+                <img class="img-fluid" src="{{Config::get('constants.storagepath')}}/{{$rightsidemostRead[$z]->photopath}}" alt="{{$rightsidemostRead[$z]->phototitle}}" onerror="this.onerror=null;this.src='{{url("images/lok-news2.jpg")}}';">
+              </a>
+              <h5 class="mt-2 font-heading-1 text-white lh pl-1">
+                <a href="{{$rightsidemostRead[$z]->url}}">{{$rightsidemostRead[$z]->title}}</a>
+              </h5>
             </div>
+            @endfor
+          </div>  
+          <div class="col-md-12 p-0">
+            <hr class="dashed-bdr-t">
+          </div>
+          <div class="row">
+            @for($z=1;$z < 3; $z++)
+            <div class="col-6 col-sm-12 col-md-12 col-lg-5 pr-0">
+              <a href="{{$rightsidemostRead[$z]->url}}">
+                <img class="img-fluid img-thumbnail" src="{{Config::get('constants.storagepath')}}/{{$rightsidemostRead[$z]->photopath}}" alt="{{$rightsidemostRead[$z]->phototitle}}" onerror="this.onerror=null;this.src='{{url("images/lok-news.jpg")}}';">
+              </a>
+            </div>
+            <div class="col-6 col-sm-12 col-md-12 col-lg-7 pr-0 pl-2">
+              <h6 class="mb-0">
+                <a href="{{$rightsidemostRead[$z]->url}}">
+                  <strong>{{$rightsidemostRead[$z]->title}}</strong>
+                </a>
+              </h6>      
+            </div>
+            @endfor      
+          </div>
+        </div>         
+      </div>
+    </div><!--2nd section news-->
+    @endif  
+    <hr class="bdr-solid p-0 mb-2">        
+    <!--square banner add-->
+    <div class="row">
+      <div class="col-md-12 p-0 text-center">
+        <p class="m-0 add-text text-right">
+          <small class="text-muted">Advertisment</small>
+        </p>
+        <img src="{{url('images/ad-277x300-add2.jpg')}}" class="img-fluid">
+      </div>
+    </div>
+    <!--square banner add-->        
+    <hr class="bdr-solid">        
+    <!--right-third-news-->
+    <div class="row mob-m-0">
+      <div class="col-md-12 bg-dark p-2 rounded">
+        <div class="row pl-0 mb-3 ml-0 title-holder">
+          <h5 class="mb-0 bdr-solid-l border-warning heading-bdr">
+            <strong>
+              <span class="bg-dark text-white pl-2 pr-1">इंडस्ट्री ब्रीफिंग
+              </span>
+            </strong>
+            <small>
+              <a href="#" title="और देखें" class="float-right mt-1 pl-2 text-warning mob-seemore bg-dark">
+                <strong>और पढ़ें</strong>
+              </a>
+            </small>
+          </h5>
+        </div>
+        <div class="row text-white">
+         <div class="col-md-6 col-6"> <a href="#"><img src="images/interview-1.jpg" class="img-fluid border rounded"></a>
+          <h6 class="mt-1 font-heading-1"><a href="#">क्या अजीत अंजुम, विनोद कापड़ी, हेमंत शर्मा कर रहे हैं</a></h6>                  
+        </div>
+
+        <div class="col-md-6 col-6"> <a href="#"><img src="images/telecop-story2.jpg" class="img-fluid border rounded"></a>
+          <h6 class="mt-1 font-heading-1"><a href="#">क्या अजीत अंजुम, विनोद कापड़ी, हेमंत शर्मा कर रहे हैं</a></h6>                  
+        </div>  
+      </div>
+
+      <div class="row text-white">
+       <div class="col-md-6 col-6"> <a href="#"><img src="images/top-story2.jpg" class="img-fluid border rounded"></a>
+        <h6 class="mt-1 font-heading-1"><a href="#">क्या अजीत अंजुम, विनोद कापड़ी, हेमंत शर्मा कर रहे हैं</a></h6>                  
+      </div>
+
+      <div class="col-md-6 col-6"> <a href="#"><img src="images/top-story3.jpg" class="img-fluid border rounded"></a>
+        <h6 class="mt-1 font-heading-1"><a href="#">क्या अजीत अंजुम, विनोद कापड़ी, हेमंत शर्मा कर रहे हैं</a></h6>                  
+      </div>  
+    </div>
+
+  </div>
+</div><!--right-third-news-->
+
+
+<hr class="bdr-solid p-0 mb-2">
+
+
+<!--सब्सक्राइब-->
+<div class="row mt-3 mob-m-0">
+  <div class="col-md-12 text-white p-0 bg-dark rounded">
+
+    <h4 class="text-white bg-warning p-1 pl-3 rounded-top" style="border-bottom: dotted #000000 2px;font-family: 'Rajdhani', sans-serif; font-weight: 700;">सब्सक्राइब</h4> 
+    <h5 class="pl-3" style="line-height: 35px;">न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए</h5>
+    <div class="form-group p-3 mb-0">
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+    <p class="text-center"><button type="button" class="btn btn-warning btn-sm">Subscribe</button></p>
+
+  </div>
+</div>
+<!--सब्सक्राइब-->
+
+
+<hr class="bdr-solid p-0 mb-2">
 
 
 
 
- </div>
-<div class="col-lg-12 col-md-12 float-left no-padding titlem mt-4">
-<h6 class="text-uppercase flama-font titlest mt-3">Videos <span><a class="flama-font float-right small pnk" href="{{url('videos.html')}}" >SEE MORE <i class="fas fa-arrow-circle-right"></i></a></span></h6>
+<!--मुख्य खबरें-->
+<div class="row media-form mt-3 bg-dark p-2 rounded mob-m-0">
+ <div class="row pl-0 mb-3 ml-0 title-holder">
+  <h5 class="mb-0 bdr-solid-l border-white heading-bdr2"><strong><span class="bg-dark text-warning pl-2 pr-1">मुख्य खबरें
 
-<div class="col no-padding text-center vid mt-2">
- <div id="sidegallery" class="carousel slide sidecap">
-                    <!-- main slider carousel items -->
-                    <div class="carousel-inner">
-                        @foreach($ArrMenuSLatestVideo as $key => $ArrMenuSLatestVideo)
-                      @if($key == 0)
-                        <div class="carousel-item active" data-slide-number="{{$key}}">
-                            <a class="position-relative d-block" href="{{url('')}}/videos/{{str_slug($ArrMenuSLatestVideo->title)}}-{{$ArrMenuSLatestVideo->yid}}.html"><img src="{{$ArrMenuSLatestVideo->img_thumb}}" class="img-fluid">
-                            <div class="vd"><i class="fas fa-play"></i></div></a>
-                            <div class="figure-caption bg-dark p-2 cw">
-                            <a href="{{url('')}}/videos/{{str_slug($ArrMenuSLatestVideo->title)}}-{{$ArrMenuSLatestVideo->yid}}.html" style="color: #fff;">{{$ArrMenuSLatestVideo->title}}</a>
-                            </div>
+  </span>
+</strong><small><a href="#" title="और देखें" class="float-right mt-1 pl-2 text-warning mob-seemore bg-dark"><strong>और पढ़ें</strong></a></small></h5></div>
 
-                        </div>
-                        @else
-                          <div class="carousel-item" data-slide-number="{{$key}}">
-                            <a class="position-relative d-block" href="{{url('')}}/videos/{{str_slug($ArrMenuSLatestVideo->title)}}-{{$ArrMenuSLatestVideo->yid}}.html"><img src="{{$ArrMenuSLatestVideo->img_thumb}}" class="img-fluid">
-                            <div class="vd"><i class="fas fa-play"></i></div></a>
-                            <div class="figure-caption bg-dark p-2 cw">
-                            <a href="{{url('')}}/videos/{{str_slug($ArrMenuSLatestVideo->title)}}-{{$ArrMenuSLatestVideo->yid}}.html" style="color: #fff;">{{$ArrMenuSLatestVideo->title}}</a>
-                            </div>
 
-                        </div>
-                        @endif
-                         @endforeach
-                         <a class="carousel-control-prev" href="#sidegallery" role="button" data-slide="prev">
+<ul class="scrollbar style-4 mt-0 pr-3 text-white story-mk">
+ <li class="mt-0"><span class="big-number text-warning">1.</span><a href="#">सामाजिक सरोकार की दिशा में ITV फाउंडेशन... </a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">2.</span><a href="#">'केसी कुलिश' अवॉर्ड से सम्मानित ये हुए पत्रकार...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">3.</span><a href="#">वेब इंडस्ट्री से कैसे हो लाभ, जानकारोंं ने बताए गुर...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">4.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li><li><span class="big-number text-warning">5.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">6.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">7.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">8.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li><span class="big-number text-warning">9.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+ <li class="border-0"><span class="big-number text-warning">10.</span><a href="#">जब इस बड़े अभिनेता ने पत्रकार से मांगी माफी...</a><small class="float-right date mt-2 text-light"> 19 July, 2018</small></li>
+</ul> 
+
+</div>
+<!--मुख्य खबरें-->
+
+
+<hr class="bdr-solid p-0 mb-2">
+
+<!--square banner add--><div class="row">
+  <div class="col-md-12 p-0 text-center">
+    <p class="m-0 add-text text-right"><small class="text-muted">Advertisment</small></p>
+    <img src="images/ad-277x300-add.jpg" class="img-fluid">
+  </div>
+</div><!--square banner add-->
+
+<hr class="bdr-solid p-0 mb-2">
+
+
+<!--story video slider-->
+<div class="row mt-3 bg-danger border-danger p-1 rounded mob-m-0">
+
+  <div class="col-md-12 p-0">
+    <div class="row pl-0 mb-2 mt-1 ml-0 title-holder">
+      <h5 class="mb-0 bdr-solid-l border-white heading-bdr2"><strong><span class="bg-danger text-white pl-2 pr-2">विडियो
+
+      </span>
+    </strong><small><a href="#" title="और देखें" class="float-right mt-1 pl-2 text-dark mob-seemore bg-danger"><strong>और पढ़ें</strong></a></small></h5></div>
+    <div id="demo" class="carousel slide story-video-slider" data-ride="carousel">
+  <!--<ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>-->
+  <div class="carousel-inner">
+    <div class="carousel-item active"> <a href="#"><img src="images/video-1.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+    <div class="carousel-item"> <a href="#"><img src="images/video-2.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+    <div class="carousel-item"> <a href="#"><img src="images/video-3.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+
+  </div>
+
+
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
     <i class="fas fa-angle-left"></i>
-    <span class="sr-only">Previous</span>
   </a>
-  <a class="carousel-control-next" href="#sidegallery" role="button" data-slide="next">
+  <a class="carousel-control-next" href="#demo" data-slide="next">
     <i class="fas fa-angle-right"></i>
-    <span class="sr-only">Next</span>
-  </a>          
-                        </div></div>
+  </a>
 </div>
+
+
 </div>
+
 </div>
+<!--story video slider-->
+
+<hr class="bdr-solid p-0 mb-2">
+
+
+<!--2nd section news--><div class="row mt-3 mob-m-0">
+  <div class="col-md-12 p-0">
+   <div class="row pl-0 mb-3 ml-0 title-holder">
+    <h5 class="mb-0 bdr-solid-l border-warning heading-bdr"><strong><span class="bg-white text-dark pl-3 pr-3">विचार मंच
+
+    </span>
+  </strong><small><a href="#" title="और देखें" class="float-right mt-1 pl-2 text-danger mob-seemore bg-white"><strong>और पढ़ें</strong></a></small></h5></div>
+
+  <div class="row m-0">
+
+    <div class="row m-0">
+      <div class="col-md-12 p-0"> <a href="#"><img src="images/vichar-story1.jpg" class="img-fluid"></a>
+        <h5 class="mt-2 font-heading-1 lh pl-1"><strong><a href="#">सुमित अवस्थी का बड़ा फैसला, जॉइन करेंगे ABP न्यूज...</a></strong></h5>
+      </div>
+    </div>  
+
+    <div class="col-md-12 p-0"><hr class="dashed-bdr-t"></div>
+
+    <div class="row">
+      <div class="col-6 col-sm-12 col-md-12 col-lg-5 pr-0"><a href="#"><img src="images/vichar-story3.jpg" class="img-fluid img-thumbnail"></a></div>
+      <div class="col-6 col-sm-12 col-md-12 col-lg-7 pr-0 pl-2"><h6 class="mb-0"><a href="#"><strong>इस DU में पत्रकारिता के छात्रों का विरोध प्रदर्शन, पुलिस पर लगाया</strong></a></h6>      
+      </div>      
+    </div>
+
+    <div class="col-md-12 p-0"><hr class="dashed-bdr-t"></div>
+
+    <div class="row">
+      <div class="col-6 col-sm-12 col-md-12 col-lg-5 pr-0"><a href="#"><img src="images/vichar-story4.jpg" class="img-fluid img-thumbnail"></a></div>
+      <div class="col-6 col-sm-12 col-md-12 col-lg-7 pr-0 pl-2"><h6 class="mb-0"><a href="#"><strong>इस DU में पत्रकारिता के छात्रों का विरोध प्रदर्शन, पुलिस पर लगाया</strong></a></h6>      
+      </div>      
+    </div>
+
+  </div>
+
+
 </div>
+</div><!--2nd section news-->
+
+
+<hr class="bdr-solid p-0 mb-2 mob-mt-30">
+
+
+<!--story gallery slider-->
+<div class="row mt-3 bg-dark border-danger p-1 rounded mob-m-0 mob-mt-30">
+
+  <div class="col-md-12 p-0">
+    <div class="row pl-0 mb-2 mt-1 ml-0 title-holder">
+      <h5 class="mb-0 bdr-solid-l border-white heading-bdr2"><strong><span class="bg-dark text-warning pl-3 pr-3">फोटो गैलरी</span>
+      </strong><small><a href="#" title="और देखें" class="float-right mt-1 pl-2 text-warning mob-seemore bg-dark"><strong>और पढ़ें</strong></a></small></h5></div>
+      <div id="demo2" class="carousel slide story-video-slider" data-ride="carousel">
+  <!--<ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>-->
+  <div class="carousel-inner">
+    <div class="carousel-item active"> <a href="#"><img src="images/gallery-5.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption bg-dark">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+    <div class="carousel-item"> <a href="#"><img src="images/gallery-5.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption bg-dark">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+    <div class="carousel-item"> <a href="#"><img src="images/gallery-5.jpg" width="100%" height="100%"></a>
+      <div class="carousel-caption bg-dark">
+
+        <p>न्यूजलेटर पाने के लिए यहां सब्सक्राइब कीजिए </p>
+      </div>   
+    </div>
+
+
+  </div>
+
+
+  <a class="carousel-control-prev" href="#demo2" data-slide="prev">
+    <i class="fas fa-angle-left"></i>
+  </a>
+  <a class="carousel-control-next" href="#demo2" data-slide="next">
+    <i class="fas fa-angle-right"></i>
+  </a>
 </div>
+
+
+</div>
+
+</div>
+<!--story gallery slider-->
+
+
+
+
+
+</div>
+
+</div><!--right part-->
+
+
